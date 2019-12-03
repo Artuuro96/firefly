@@ -1,0 +1,155 @@
+<style>
+     @media screen and (min-width:1280px) {
+        .responsivo-xlg {
+            width:36%;
+            margin-right: 32%;
+            margin-left: 32%;
+        }
+    }
+
+    @media screen and (min-width:992px) {
+        .responsivo-lg {
+            width:36%;
+            margin-right: 32%;
+            margin-left: 32%;
+        }
+    }
+
+    @media screen and (min-width:768px) {
+        .responsivo-md {
+            width:36%;
+            margin-right: 32%;
+            margin-left: 32%;
+        }
+    }
+
+    @media screen and (min-width:577px) {
+        .responsivo-sm {
+            width:36%;
+            margin-right: 32%;
+            margin-left: 32%;
+        }
+    }
+
+    @media screen and (max-width:576px) {
+        .responsivo-xs {
+            width:70%;
+            margin-right: 15%;
+            margin-left: 15%;
+        }
+    }
+</style>
+<div ng-show="!en_sesion" >
+    <br><br><br>
+    <div style="width:100%">
+        <div class="container" ng-show=!recuperar_contrasenia>
+            <div class="responsivo-lg responsivo-md responsivo-sm responsivo-xs responsivo-xlg">
+                <div class="card card-inverse card-primary text-center">
+                    <div class="card" >
+                        <div class="card-body text-center">
+                            <img class="img-fluid" src="/public/images/firefly_blanco.png" style="width:90%;">
+                            <br><br>                                               
+                            <form>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-user"></i>
+                                        </span> 
+                                    </div>
+                                    <input type="text" class="form-control" placeholder="Username" ng-model = "usuario" ng-requiered>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span> 
+                                    </div>
+                                    <input type="password" class="form-control" placeholder="Contraseña" ng-model = "contrasena" ng-required >
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-success btn-lg btn-block" ng-click = "iniciar_sesion()">
+                                        Iniciar Sesión
+                                        <i class="fas fa-sign-in-alt" style="text-align: right"></i>
+                                    </button>
+                                </div>
+                                <br>
+                                <div>
+                                    <a href="" style="font-size:80%; float:right" ng-show="!recuperar_contrasenia" ng-click="recuperar_contrasenia = true">
+                                        Recuperar contraseña  
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="container" ng-show=recuperar_contrasenia>
+            <div class="responsivo-lg responsivo-md responsivo-sm responsivo-xs responsivo-xlg">
+                <div class="card card-inverse card-primary text-center">
+                    <div class="card" >
+                        <div class="card-body text-center">
+                            <img class="img-fluid" src="/public/images/firefly_blanco.png" style="width:90%;">
+                            <br><br>                                               
+                            <form>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Correo Electrónico" ng-model="email" ng-disabled="div_exito">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary" type="button" ng-click="enviar_correo(email)" ng-disabled="div_exito">
+                                            <i class="fas fa-mail-bulk"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Codigo de Confirmación" ng-model="codigo_confirmar" ng-disabled="div_exito">
+                                    <div class="input-group-append">
+                                        <button class="btn btn-outline-primary" type="button" ng-click="confirmar_codigo(codigo_confirmar)" ng-disabled="div_exito">
+                                            <i class="fas fa-key"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="alert alert-primary text-center" ng-show="div_exito">
+                                    Código verificado
+                                </div>
+                                <div class="alert alert-danger text-center" ng-show="div_alerta">
+                                    El código ingresado no es válido, intente de nuevo
+                                </div>
+                                <div class="input-group mb-3" ng-show="div_exito">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span> 
+                                    </div>
+                                    <input type="password" class="form-control" placeholder="Nueva Contraseña" ng-model="nueva_contrasenia">
+                                </div>
+                                <div class="input-group mb-3" ng-show="div_exito">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text">
+                                            <i class="fas fa-lock"></i>
+                                        </span> 
+                                    </div>
+                                    <input type="password" class="form-control" placeholder="Confirmar Contraseña" ng-model="conf_nueva_contrasenia" ng-change="valida_contrasenia(nueva_contrasenia,conf_nueva_contrasenia)" ng-required >
+                                </div>
+                                <div class="alert alert-danger text-center" ng-show="coinciden">
+                                    Las contraseñas no coinciden
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary btn-lg btn-block" ng-click = "cambiar_contrasenia(nueva_contrasenia)" ng-disabled = "!div_exito">
+                                        Recuperar contraseña
+                                        <i class="fas fa-sign-in-alt" style="text-align: right"></i>
+                                    </button>
+                                </div>
+                                <br>
+                                <div>
+                                    <a href="" style="font-size:80%; float:right" ng-show="recuperar_contrasenia" ng-click="recuperar_contrasenia = false">
+                                        Iniciar Sesión 
+                                    </a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

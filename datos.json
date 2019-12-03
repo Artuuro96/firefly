@@ -1,0 +1,26 @@
+{
+    "id" : {
+        "name":{
+            "first": "Layla",
+            "last": "Clark"
+        },
+        "animal": "dog",
+        "color": "Yellow",
+        "breed": "Carolina Dog"
+    }, 
+    "shots": [
+        {
+            "type": "Heartdown",
+            "date": "2017-08-11"
+        },
+        {
+            "type": "Intestinal Parasite",
+            "date": "2017-08-11"
+
+        },
+        {
+            "type": "Prueba",
+            "date": "2015-08-11"
+        }
+    ]
+}

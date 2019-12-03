@@ -1,0 +1,10 @@
+[{
+    "microservicio":"luminaria0",
+    "script": "../backend/microservicios/luminaria0"
+},{
+    "microservicio":"luminaria1",
+    "script": "../backend/microservicios/luminaria1"
+},{
+    "microservicio":"luminaria2",
+    "script": "../backend/microservicios/luminaria2"
+}]

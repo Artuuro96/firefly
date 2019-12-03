@@ -1,0 +1,15 @@
+{
+    "tiempo_error": 60000,
+    "correos_errores": [
+        "arturorodr96@gmail.com",
+        "josuers823@gmail.com"
+    ],
+    "correos_reportes": [
+        "arturorodr96@gmail.com",
+        "josuers823@gmail.com"
+    ],
+    "intervalo": "10",
+    "hora_encendido": "19:08",
+    "hora_apagado": "19:07",
+    "numero_registros_pdf": "20"
+}

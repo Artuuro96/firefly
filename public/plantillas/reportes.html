@@ -1,0 +1,71 @@
+<style>
+  @media screen and (max-width:576px) {
+      .text-xs-center {
+          text-align: center;
+          font-size: 140%;
+      }
+      .texto-xs {
+          font-size: 100%;
+      }
+  }
+</style>
+<div class="container-fluid" style="margin-top: 5px;" >
+    <br><br><br>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Reportes</h1>
+    </div>
+    <ul class="list-group">
+        <li class="list-group-item" style="background: rgb(22,86,168);
+        background: linear-gradient(90deg, rgba(22,86,168,1) 0%, rgba(22,145,168,1) 84%);">
+            <div class="row">
+                <div class="col-lg-3">
+                    <b style="color: white">Reporte ID</b>
+                </div>
+                <div class="col-lg-1">
+                    <b style="color: white">Luminaria</b>
+                </div>
+                <div class="col-lg-2">
+                    <b style="color: white">Fecha y Hora</b>
+                </div>
+                <div class="col-lg-2">
+                    <b style="color: white">Ubicacion</b>
+                </div>
+                <div class="col-lg-2">
+                    <b style="color: white">Reporta</b>
+                </div>
+                <div class="col-lg-2">
+                    <b style="color: white">Terminado</b>
+                </div>
+            </div>
+        </li>
+        <li class="list-group-item" ng-repeat = "reporte in reportes">
+            <div class="row">
+                <div class="col-lg-3">
+                    <a href="{{reporte.ruta}}" target="_blank">{{reporte._id}}</a>
+                </div>
+                <div class="col-lg-1 text-center">
+                    {{reporte.numero_luminaria}}
+                </div>
+                <div class="col-lg-2">
+                    {{reporte.fecha.substr(0,19).replace("T", " ")}}
+                </div>
+                <div class="col-lg-2">
+                    {{reporte.ubicacion[0]}}<br>
+                    {{reporte.ubicacion[1]}}
+                </div>
+                <div class="col-lg-2">
+                    {{reporte.usuario_reporte}}
+                </div>
+                <div class="col-lg-2">
+                    <div class="float-center">
+                        <label class="contenedor1">
+                            <input type="checkbox" ng-model = "valor" value="{{reporte.terminado}}">
+                            <span class="checkmarcado"></span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </li>
+        
+    </ul>
+</div>

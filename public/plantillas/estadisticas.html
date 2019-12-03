@@ -1,0 +1,136 @@
+<style>
+    @media screen and (max-width:576px) {
+        .text-xs-center {
+            text-align: center;
+            font-size: 140%;
+        }
+        .texto-xs {
+            font-size: 100%;
+        }
+    }
+
+    .borde-verde {
+        border-left-color: #5cb85c;
+        border-left-width: 6px;
+    }
+
+    .borde-azul {
+        border-left-color: #0275d8;
+        border-left-width: 6px;
+    }
+
+    .borde-naranja {
+        border-left-color: #f0ad4e;
+        border-left-width: 6px;
+    }
+
+    .borde-rojo {
+        border-left-color: #d9534f;
+        border-left-width: 6px;
+    }
+
+    .borde-azul-info {
+        border-left-color: #5bc0de;
+        border-left-width: 6px;
+    }
+</style>
+<div class="container-fluid" style="margin-top: 5px;">
+    <br>
+    <br>
+    <br>
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Estadísticas generales</h1>
+    </div>
+    <div class="row">
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card borde-verde shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">Luminarias Activas</div>
+                            <div class="float-left" style="font-size: 2em">{{lum_activas}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="far fa-lightbulb" style="font-size: 4em; color: green"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card borde-rojo shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Luminarias Inactivas</div>
+                            <div class="float-left" style="font-size: 2em">{{lum_inactivas}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="far fa-lightbulb" style="font-size: 4em; color: red"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card borde-azul shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">Energía Total Consumida</div>
+                            <div class="float-left" style="font-size: 2em">{{consumo_total}} Kwh</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-plug" style="font-size: 4em; color:#0275d8"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card borde-naranja shadow h-100 py-2">
+                <div class="card-body">
+                    <div class="row no-gutters align-items-center">
+                        <div class="col mr-2">
+                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Reportes</div>
+                            <div class="float-left" style="font-size: 2em">{{cantidad_registros}}</div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-exclamation-circle" style="font-size: 4em; color:#ffae42"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xl-8 col-lg-7">
+            <div class="card borde-azul shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-primary">
+                        <b>Gráfica de Consumo General de Energía</b>
+                    </h5>
+                    <div class="chart-area">
+                        <canvas id="pastel" width="800" height="400"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-xl-4 col-lg-5">
+            <div class="card borde-azul-info shadow mb-4">
+                <div class="card-body">
+                    <h5 class="card-title text-center text-info">
+                        <b>Registro de Luminarias</b>
+                    </h5>
+                    <div class="container-fluid">
+                        <div class="alert alert-dark" style="background-color: black;" height="400">
+                            <div ng-repeat=" datos in logs">
+                                <p style="color: white">{{datos.fecha}} : {{datos.mensaje}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

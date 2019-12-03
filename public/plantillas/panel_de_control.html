@@ -1,0 +1,153 @@
+<style>
+    @media screen and (max-width:576px) {
+        .text-xs-center {
+            text-align: center;
+            font-size: 140%;
+        }
+        .texto-xs {
+            font-size: 100%;
+        }
+        .scrol {
+            overflow-x:scroll;
+        }
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        $("#mi_luminarias_busqueda").on("keyup", function () {
+            var value = $(this).val().toLowerCase();
+            $("#tabla_luminarias tr").filter(function () {
+                $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+            });
+        });
+    });
+</script>
+<div class="container-fluid" style="margin-top: 5px;">
+    <br>
+    <br>
+    <br>
+    <h2 class="text-lg-left text-md-left text-sm-center text-xs-center">
+        Panel de Control
+    </h2>
+    <div class="col-lg-12">
+        <br>
+        <div class="form-group">
+            <div class="row">
+                <div class="col-3">
+                    <input class="form-control" id="mi_luminarias_busqueda" type="text" placeholder="Buscar # luminaria">
+                </div>
+                <div class="col-3"></div>
+                <div class="col-4">
+                    <select class="form-control" ng-model="modificar_seleccion">
+                        <option selected></option>
+                        <option>Apaga todas</option>
+                        <option>Enciende todas</option>
+                        <option>Encender seleccionadas</option>
+                        <option>Apagar Seleccionadas</option>
+                    </select>
+                </div>
+                <div class="col-2">
+                    <button type="submit" class="btn btn-primary mb-2" ng-click="modificacion_total()">Aplicar</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-auto mr-auto scrol">
+            <table class="table table-sm table-hover text-center">
+                <thead style="border-color: white;">
+                    <tr>
+                        <th scope="col">No. luminaria</th>
+                        <th scope="col">Zona</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Coordenadas</th>
+                        <th scope="col">Modificar voltaje</th>
+                        <th scope="col">Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody id="tabla_luminarias">
+                    <tr ng-repeat="luminaria in luminarias.respuesta | orderBy:'numero_luminaria'">
+                        <td>
+                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#especificaciones" ng-click="ver_especificaciones(luminaria.numero_luminaria)">
+                                {{luminaria.numero_luminaria}}
+                            </button>
+                        </td>
+                        <td>
+                            {{luminaria.zona}}
+                        </td>
+                        <td>
+                            <i ng-if="luminaria.estado=='activa'" class="fas fa-lightbulb" style="font-size: 40px;color:#00ff60"></i>
+                            <i ng-if="luminaria.estado=='en reparacion'" class="fas fa-lightbulb" style="font-size: 40px;color:#ff6600"></i>
+                            <i ng-if="luminaria.estado=='inactiva'" class="fas fa-lightbulb" style="font-size: 40px;color:#ff0000"></i>
+                        </td>
+                        <td>
+                            X: {{luminaria.coordenada_x}}
+                            <br> Y: {{luminaria.coordenada_y}}
+                        </td>
+                        <td>
+                            <div class="contenido">
+                                <button type="button" class="btn btn-outline-warning  btn-lg" ng-show="luminaria.estado=='inactiva'" ng-click="encender(luminaria.numero_luminaria, 1023, 'activa')">
+                                    <i class="fas fa-power-off" style="font-size: 20px;" ng-click="encender(luminaria.numero_luminaria, 1023, 'activa')"></i>
+                                </button>
+                                <button type="button" class="btn btn-warning  btn-lg" ng-show="luminaria.estado=='activa'" ng-click="apagar(luminaria.numero_luminaria, 0, 'inactiva')">
+                                    <i class="fas fa-power-off" style="font-size: 20px;" ng-click="apagar(luminaria.numero_luminaria, 0, 'inactiva')"></i>
+                                </button>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="float-center">
+                                <label class="contenedor1">
+                                    <input type="checkbox" ng-model="valor"  ng-change="seleccionar(luminaria.numero_luminaria, valor)">
+                                    <span class="checkmarcado"></span>
+                                </label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="especificaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h2 class="modal-title" id="exampleModalLabel">
+                                <h2>Luminaria: {{especificaciones.numero_luminaria}}</h2>
+                            </h2>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div>
+
+                        </div>
+                        <div class="modal-body">
+                            <div class="col-lg-12">
+                                <div class="row">
+                                    <div class="col-lg-6">
+                                        <b>Zona: </b>{{especificaciones.zona}}
+                                        <br>
+                                        <b>Consumo: </b>{{especificaciones.especificaciones.consumo}} Watts
+                                        <br>
+                                        <b>Voltaje: </b>{{especificaciones.especificaciones.voltaje}} Volts
+                                        <br>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <b>Estado: </b>{{especificaciones.estado}}
+                                        <br>
+                                    </div>
+                                    <br>
+                                    <!--<div class="btn-group btn-group-md col-12" role="group" >
+                                <button type="button" class="list-group-item list-group-item-action" role="tab" ng-click="voltaje_a_modificar = 0" >0% Apagar</button>
+                                <button type="button" class="list-group-item list-group-item-action" role="tab" ng-click="voltaje_a_modificar = 50" >50%</button>
+                                <button type="button" class="list-group-item list-group-item-action" role="tab" ng-click="voltaje_a_modificar = 100">100%</button>
+                            </div>-->
+                                </div>
+                            </div>
+                            <div class="col-lg-12 text-center">
+                                <br>
+                                <b class="text-center">Nivel de voltaje: </b>{{voltaje_a_modificar}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

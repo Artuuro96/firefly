@@ -1,0 +1,49 @@
+<style>
+    @media screen and (max-width:576px) {
+        .text-xs-center {
+            text-align: center;
+            font-size: 140%;
+        }
+        .texto-xs {
+            font-size: 100%;
+        }
+    }
+    .marker {
+        background-image: url('public/images/foco.png');
+        background-size: cover;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+    } 	
+    body { margin:0; padding:0; }
+    #map { position:absolute; top:130px; bottom:0; width:98%; }
+</style>
+
+
+<div class="container-fluid" style="margin-top: 5px;" id="mapa">
+    <br><br><br>
+    <h2>Mapa</h2>
+	<div id='map'></div>
+    <div class="modal fade" id="informacion_de_luminaria" tabindex="-1" role="dialog" >
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="text-center">Gráfica de Consumo</h4>
+                </div>
+                <div class="modal-body" style="overflow: scroll">
+                    <div class="col-12">
+                        <canvas id="consumo_tiempo_real"></canvas>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Salir</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+

@@ -1,0 +1,571 @@
+<style>
+    @media screen and (max-width:576px) {
+        .text-xs-center {
+            text-align: center;
+            font-size: 140%;
+        }
+        .texto-xs {
+            font-size: 100%;
+        }
+    } 
+</style>
+
+<div class="container-fluid" style="margin-top: 5px;">
+    <br><br><br>
+    <h2 class="text-lg-left text-md-left text-sm-center text-xs-center">
+        Desarrollador
+    </h2>
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active"  data-toggle="tab" role="tab" aria-controls="nav-home" aria-selected="true" ng-click="sesiones_menu()">Sesiones</a>
+            <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-controls="nav-profile" aria-selected="false" ng-click="usuarios_menu()">Usuarios</a>
+            <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-controls="nav-contact" aria-selected="false" ng-click="luminarias_menu()">Luminarias</a>
+            <a class="nav-item nav-link" data-toggle="tab" role="tab" aria-controls="nav-contact" aria-selected="false" ng-click="logs_menu()">Logs</a>
+        </div>
+    </nav>
+    <br>
+    <div class="col-lg-12" ng-show="sesiones_menu1">
+        <div class="container">
+            <div class="card" ng-repeat = "sesion in sesiones.respuesta">
+                <div class="card-header">
+                    <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        {{sesion.usuario}}
+                    </button>
+                    <div class="float-right">
+                        <i class="fas fa-sign-out-alt" style="font-size:210%;cursor:pointer;color:#ec3750" data-toggle="tooltip" data-placement="top" title="Desconectar" ng-click="desconectar_usuario(sesion.socket_id)"></i>
+                    </div>
+                </div>
+                <div class="card card-body">
+                    <p> <b>Socket:</b> {{sesion.socket_id}} </p>
+                    <p> <b>Menú actual:</b> {{sesion.menu_actual}} </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" ng-show="usuarios_menu1">
+        <div class="row">
+            <div class="col-lg-10 float-right">
+                <div class="col-lg-6">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregar_usuario">
+                        Nuevo usuario <i class="fas fa-user-plus"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="row">
+            <div class="col-lg-12">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Usuario</th>
+                            <th>Nombre</th>
+                            <th>Tipo usuario</th>
+                            <th>Menus</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="usuario in usuarios" ng-show="usuario.tipo_usuario != 'desarrollador'">
+                            <td>{{usuario.usuario}}</td>
+                            <td>{{usuario.nombre}}</td>
+                            <td>{{usuario.tipo_usuario}}</td>
+                            <td>
+                                <button ng-show="permisos" type="button" class="btn btn-outline-info" data-toggle="modal" data-target="#permisos" ng-click="permisos_por_usuario(usuario._id)">
+                                    Permisos <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                            <td>
+                                <button type="button" class="btn btn-danger" ng-click="eliminar_usuario(usuario.usuario)">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                                <button type="button" class="btn btn-info" ng-click="abrir_modal_editar_usuario(usuario)">
+                                    <i class="fas fa-edit"></i>
+                                 </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="modal fade" id="agregar_usuario" tabindex="-1" role="dialog" >
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="height: 600px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Nuevo Usuario</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="overflow: scroll">
+                    <form>
+                        <div class="form-group">
+                            <label for="Nombre">Nombre</label>
+                            <input type="text" class="form-control" id="Nombre" placeholder="Nombre" ng-model="usuario.nombre" required>
+                            <label for="Usuario">Usuario</label>
+                            <input type="text" class="form-control" id="Usuario" placeholder="Usuario" ng-model="usuario.usuario" required>
+                            <label for="Correo">Correo</label>
+                            <input type="text" class="form-control" id="Correo" placeholder="Correo" ng-model="usuario.correo" ng-change="valida_correo(usuario.correo)" required>
+                            <br>
+                            <div class="alert alert-danger text-center" ng-show="valido">
+                                El correo ingresado no es válido
+                            </div>
+                            <label for="Contraseña">Contraseña</label>
+                            <input type="password" class="form-control" id="Contrasena" placeholder="Contrasena" ng-model="usuario.contrasena" required>
+                            <label for="Contraseña">Confirmar contraseña</label>
+                            <input type="password" class="form-control" id="Confirmar" placeholder="Confirmar" ng-model="usuario.confirmar" ng-change="valida_contrasena(usuario.confirmar, usuario.contrasena)"/ required>
+                            <br>
+                            <div class="alert alert-danger text-center" ng-show="coincidencia">
+                                Las contraseñas no coinciden
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleFormControlSelect1">Tipo de Usuario</label>
+                                <select class="form-control" id="exampleFormControlSelect1" ng-model="usuario.tipo_usuario">
+                                    <option value="desarrollador">Desarrollador</option>
+                                    <option value="administrador">Administrador</option>
+                                    <option value="usuario">Usuario</option>
+                                </select>
+                            </div>
+                        </div>
+                        <label for="Contraseña">Menus</label>
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="menu in menus">
+                                <div class="float-left">
+                                    {{menu.nombre_menu}}
+                                </div> 
+                                <div class="float-right">
+                                    <label class="contenedor1">
+                                        <input type="checkbox" ng-model = "valor" ng-change = "permisos_menu(menu._id, valor)">
+                                        <span class="checkmarcado"></span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" ng-click="guardar_usuario()">Guardar Usuario</button>
+                </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="permisos" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="height: 600px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Permisos<h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <ul class="list-group">
+                            <li class="list-group-item" ng-repeat="menu in todos_los_menus">
+                                <div class="float-left">
+                                    {{menu.nombre_menu}}
+                                </div> 
+                                <div class="float-right">
+                                    <label class="contenedor1">
+                                        <input type="checkbox" ng-model = "valor" ng-change = "agregar_menu(menu._id, valor)">
+                                        <span class="checkmarcado"></span>
+                                    </label>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" ng-click="asignar_nuevos_menus()">Guardar Permisos</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" ng-show="luminarias_menu1">
+        <div class="row">
+            <div class="col-lg-10 float-right">
+                <div class="col-lg-4">
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#agregar_luminaria">
+                        Agregar luminaria
+                    </button>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="col-auto mr-auto" ng-show="luminarias_menu1">
+            <table class="table table-sm table-hover text-center">
+                <thead style="border-color: white;">
+                    <tr>
+                        <th scope="col">No. luminaria</th>
+                        <th scope="col">Zona</th>
+                        <th scope="col">Node MCU ID</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Coordenadas</th>
+                        <th scope="col">Voltaje</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="luminaria in luminarias.respuesta | orderBy:'numero_luminaria'">
+                        <td>
+                            <button type="button" class="btn btn-link" data-toggle="modal" data-target="#especificaciones" ng-click="ver_especificaciones(luminaria.numero_luminaria)">
+                                {{luminaria.numero_luminaria}}
+                            </button>
+                        </td>
+                        <td>
+                            {{luminaria.zona}}
+                        </td>
+                        <td>
+                            {{luminaria.node_id}}
+                        </td>
+                        <td>
+                            <i ng-if="luminaria.estado=='activa'" class="fas fa-lightbulb" style="font-size: 40px;color:#00ff60"></i>
+                            <i ng-if="luminaria.estado=='en reparacion'" class="fas fa-lightbulb" style="font-size: 40px;color:#ff6600"></i>
+                            <i ng-if="luminaria.estado=='inactiva'" class="fas fa-lightbulb" style="font-size: 40px;color:#ff0000"></i>
+                        </td>
+                        <td>
+                            X: {{luminaria.coordenada_x}} <br>
+                            Y: {{luminaria.coordenada_y}}
+                        </td>
+                        <td>
+                            {{luminaria.voltaje}}
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#modificar_especificaciones" ng-click="ver_especificaciones(luminaria.numero_luminaria)">
+                                <i class="far fa-edit" style="font-size:20px;"></i>
+                            </button>
+                            <button type="button" class="btn btn-danger" data-toggle="modal" ng-click="eliminar_luminaria(luminaria.numero_luminaria)">
+                                <i class="fas fa-trash-alt style=font-size:20px;"></i>
+                            </button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="modal fade" id="especificaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Especificaciones</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            <b>Número de Luminaria: </b>{{especificaciones.numero_luminaria}} <br>
+                            <b>Consumo : </b>{{especificaciones.especificaciones.consumo}} Watts<br>
+                            <b>Voltaje: </b>{{especificaciones.especificaciones.voltaje}} Volts<br>
+                            <b>Número de Lumenes: </b>{{especificaciones.especificaciones.numero_lumenes}} <br>
+                            <b>Temperatura: </b>{{especificaciones.especificaciones.temperatura}} ºF<br>
+                            <b>Ángulo de iluminación: </b>{{especificaciones.especificaciones.angulo_iluminacion}}º<br>
+                            <b>Vida útil: </b>{{especificaciones.especificaciones.vida_util}} horas<br>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-primary" data-dismiss="modal">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="modificar_especificaciones" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content" style="height: 600px;">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modificar luminaria numero: Luminaria {{luminaria_modificar}}</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" style="overflow-y:scroll">
+                        <form>
+                            <div class="form-group" >
+                                <label class="border-bottom" style="width: 100%" ><b>ESPECIFICACIONES</b></label>
+                                <br><br>
+                                <label >Numero de luminaria</label>
+                                <input type="text" class="form-control"  ng-model="especificaciones.numero_luminaria"  >
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Coordenada X</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.coordenada_x" >
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Coordenada Y</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.coordenada_y" >
+                                    </div>
+                                </div>
+                                <br>
+                                <label >Estado</label>
+                                <div class="input-group mb-3">
+                                    <select class="custom-select"  ng-model="especificaciones.estado">
+                                        <option >activa</option>
+                                        <option >inactiva</option>
+                                        <option >en reparacion</option>
+                                    </select>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Node MCU ID</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.node_id">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Estado </label>
+                                        <div class="input-group mb-3">
+                                            <select class="custom-select"  ng-model="especificaciones.voltaje">
+                                                <option >Encendida</option>
+                                                <option >Apagada</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Zona</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.zona" >
+                                    </div>
+                                </div>
+                                <br>
+                                <label class="border-bottom" style="width: 100%" ><b>ESPECIFICACIONES</b></label>
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Consumo</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.consumo" >
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Voltaje</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.voltaje">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Numero de Lumenes</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.numero_lumenes">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Temperatura</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.temperatura">
+                                    </div>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Angulo de iluminacion</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.angulo_iluminacion">
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                        <label >Vida util</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.vida_util">
+                                    </div>
+                                </div>
+                                <br>
+                                <label class="border-bottom" style="width: 100%" ><b>MEDIDAS</b></label>
+                                <br><br>
+                                <div class="row">
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                        <label >Largo</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.medidas.largo">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                        <label >Ancho</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.medidas.ancho">
+                                    </div>
+                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                        <label >Alto</label>
+                                        <input type="text" class="form-control"  ng-model="especificaciones.especificaciones.medidas.alto">
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" ng-click="modificar_luminaria(especificaciones.numero_luminaria)">Guardar cambios</button>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        </div>      
+        <div class="modal fade" id="agregar_luminaria" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" style="height: 600px;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Añadir luminaria</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body" style="overflow-y:scroll">
+                    <form>
+                        <div class="form-group" >
+                            <label class="border-bottom" style="width: 100%" ><b>DATOS GENERALES</b></label>
+                            <br><br>
+                            <label >Numero de luminaria</label>
+                            <input type="text" class="form-control" ng-model="numero_luminaria"  >
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Coordenada X</label>
+                                    <input type="text" class="form-control" ng-model="coordenada_x" >
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Coordenada Y</label>
+                                    <input type="text" class="form-control" ng-model="coordenada_y" >
+                                </div>
+                            </div>
+                            <br>
+                            <label >Estado</label>
+                            <div class="input-group mb-3">
+                                <select class="custom-select" ng-model="estado">
+                                    <option selected>...</option>
+                                    <option >activa</option>
+                                    <option >inactiva</option>
+                                    <option >en reparacion</option>
+                                </select>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-6">
+                                    <label >MCU ID</label>
+                                    <input type="text" class="form-control" ng-model="node_id">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Estado inicial</label>
+                                    <div class="input-group mb-3">
+                                        <select class="custom-select" ng-model="voltaje">
+                                            <option >Apagada</option>
+                                            <option >Encendida</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Zona</label>
+                                    <input type="text" class="form-control" ng-model="zona" >
+                                </div>
+                            </div>
+                            <br>
+                            <label class="border-bottom" style="width: 100%" ><b>ESPECIFICACIONES</b></label>
+                            <br><br>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Consumo</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.consumo" >
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Voltaje</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.voltaje">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Numero de Lumenes</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.numero_lumenes">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Temperatura</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.temperatura">
+                                </div>
+                            </div>
+                            <br>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Angulo de iluminacion</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.angulo_iluminacion">
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-3">
+                                    <label >Vida util</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.vida_util">
+                                </div>
+                            </div>
+                            <br>
+                            <label class="border-bottom" style="width: 100%" ><b>MEDIDAS</b></label>
+                            <br><br>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                    <label >Largo</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.medidas.largo">
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                    <label >Ancho</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.medidas.ancho">
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4 col-xs-3">
+                                    <label >Alto</label>
+                                    <input type="text" class="form-control" ng-model="especificaciones.medidas.alto">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" ng-click="guardar_luminaria()">Guardar Luminaria</button>
+                </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12" ng-show="logs_menu1">
+        <div class="alert alert-dark log" id="cuadro_log" role="alert" style="overflow-y: scroll;background-color: black;">
+            <p ng-repeat="log in logs" style="color:white">
+                <b ng-class="log.error ? 'error': 'exito'">{{log.msj_estandar}}</b> {{log.res_web_service}} {{log.mensaje}}
+            </p>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="editar_usuario_des" tabindex="-1" role="dialog" >
+    <div class="modal-dialog" role="document">
+        <div class="modal-content" style="height: 600px;">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar {{usuario.nombre}}</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body" style="overflow: scroll">
+            <form>
+                <div class="form-group">
+                    <label for="Nombre">Nombre</label>
+                    <input type="text" class="form-control" id="Nombre_edit" placeholder="Nombre" ng-model="usuario.nombre" required>
+                    <label for="Usuario">Usuario</label>
+                    <input type="text" class="form-control" id="Usuario_edit" placeholder="Usuario" ng-model="usuario.usuario" required>
+                    <label for="Correo">Correo</label>
+                    <input type="text" class="form-control" id="Correo_edit" placeholder="Correo" ng-model="usuario.correo" ng-change="valida_correo(usuario.correo)" required>
+                    <br>
+                    <div class="alert alert-danger text-center" ng-show="valido">
+                        El correo ingresado no es válido
+                    </div>
+                    <label for="Contraseña">Contraseña</label>
+                    <input type="password" class="form-control" id="Contrasena_edit" placeholder="Contrasena" ng-model="usuario.contrasena" required>
+                    <label for="Contraseña">Confirmar contraseña</label>
+                    <input type="password" class="form-control" id="Confirmar_edit" placeholder="Confirmar" ng-model="usuario.confirmar" ng-change="valida_contrasena(usuario.confirmar, usuario.contrasena)"/ required>
+                    <br>
+                    <div class="alert alert-danger text-center" ng-show="coincidencia">
+                        Las contraseñas no coinciden
+                    </div>
+                    <div class="form-group">
+                        <label for="exampleFormControlSelect1">Tipo de Usuario</label>
+                        <select class="form-control" id="exampleFormControlSelect1_edit" ng-model="usuario.tipo_usuario">
+                            <option value="desarrollador">Desarrollador</option>
+                            <option value="administrador">Administrador</option>
+                            <option value="usuario">Usuario</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" ng-click="modificar_usuario()">Editar Usuario</button>
+        </div>
+        </div>
+    </div>
+</div>
+

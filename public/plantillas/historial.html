@@ -1,0 +1,187 @@
+<style>
+    @media screen and (max-width:576px) {
+        .text-xs-center {
+            text-align: center;
+            font-size: 140%;
+        }
+        .texto-xs {
+            font-size: 100%;
+        }
+    }
+
+    .borde-azul {
+        border-left-color: #0275d8;
+        border-left-width: 6px;
+    }
+</style>
+
+<div class="container-fluid" style="margin-top: 5px;">
+    <br>
+    <br>
+    <br>
+    <h2 class="text-lg-left text-md-left text-sm-center text-xs-center">
+        Historial
+    </h2>
+    <div class="card borde-azul shadow h-100 py-2">
+        <div class="card-body row">
+            <div class="col-2">
+                <div class="btn-group " role="group">
+                    <button class="btn btn-primary" ng-show="!por_meses" ng-click="en_meses()">Meses</button>
+                    <button class="btn btn-danger" ng-show="por_meses" ng-click="indefinido()">Meses</button>
+                    <button class="btn btn-danger" ng-show="por_dias" ng-click="indefinido()">Días</button>
+                    <button class="btn btn-primary" ng-show="!por_dias" ng-click="en_dias()">Días</button>
+                </div>
+            </div>
+            <div class="col-8"></div>
+            <div class="col-2" ng-show="mostrar_datos">
+                <button type="submit" class="btn btn-primary mb-2" ng-show="!mostrar_pdf" ng-click="genera_pdf_historial()">Generar PDF</button>
+                <a href="{{ruta_pdf}}" target="_blank">
+                    <button type="button" class="btn btn-primary mb-2" ng-show="mostrar_pdf"  ng-click="ocultar_pdf()">Ver PDF</button>
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="row" ng-show="por_meses">
+                <div class="col-8">
+                    <form class="form-inline">
+                        <div class="form-group mb-2">
+                            <a>#Luminaria:</a>
+                        </div>
+                        <div class="form-group mx-sm-2 mb-1">
+                            <select class="form-control" ng-change="buscar_luminaria(luminaria)" ng-model="luminaria">
+                                <option ng-repeat="contenido in luminarias | orderBy:'contenido.numero_luminaria'">{{contenido.numero_luminaria}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <a>Año: </a>
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                            <select class="form-control" ng-change="seleccion_anio(anio)" ng-model="anio">
+                                <option ng-repeat="contenido in anios | orderBy:'contenido'" value="{{contenido}}">{{contenido}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <a>Mes:</a>
+                        </div>
+
+                        <div class="form-group mx-sm-3 mb-2">
+                            <select class="form-control" ng-change="seleccion_mes(mes)" ng-model="mes">
+                                <option></option>
+                                <option value="0">Enero</option>
+                                <option value="1">Febrero</option>
+                                <option value="2">Marzo</option>
+                                <option value="3">Abril</option>
+                                <option value="4">Mayo</option>
+                                <option value="5">Junio</option>
+                                <option value="6">Julio</option>
+                                <option value="7">Agosto</option>
+                                <option value="8">Septiembre</option>
+                                <option value="9">Octubre</option>
+                                <option value="10">Noviembre</option>
+                                <option value="11">Diciembre</option>
+                            </select>
+                        </div>
+                        <div class="form-group mx-sm-2 mb-1">
+                            <button type="submit" class="btn btn-primary mb-2" ng-click="graficar()">Graficar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" ng-show="boton_tabla_grafica && por_meses">
+                    <button class="btn btn-primary" style="float: right;" ng-show="!mostrar_grafica_tabla" ng-click="por_tabla_grafica()">Mostrar tabla</button>
+                    <button class="btn btn-primary" style="float: right;" ng-show="mostrar_grafica_tabla" ng-click="por_tabla_grafica()">Mostrar grafica</button>
+                </div>
+            </div>
+            <div class="row" ng-show="por_dias">
+                <div class="col-8">
+                    <form class="form-inline ">
+                        <div class="form-group mb-2">
+                            <a>#Luminaria:</a>
+                        </div>
+                        <div class="form-group mx-sm-2 mb-1">
+                            <select class="form-control" ng-change="buscar_luminaria(luminaria)" ng-model="luminaria">
+                                <option ng-repeat="contenido in luminarias | orderBy:'contenido.numero_luminaria'">{{contenido.numero_luminaria}}</option>
+                            </select>
+                        </div>
+                        <div class="form-group mb-2">
+                            <a>Fecha:</a>
+                        </div>
+                        <div class="form-group mx-sm-3 mb-2">
+                            <input type="date" ng-change="seleccion_dia(dia)" ng-model="dia">
+                        </div>
+                        <div class="form-group mx-sm-2 mb-1">
+                            <button type="submit" class="btn btn-primary mb-2" ng-click="graficar()">Graficar</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="col-2"></div>
+                <div class="col-2" ng-show="boton_tabla_grafica && por_dias">
+                    <button class="btn btn-primary" style="float: right;" ng-show="!mostrar_grafica_tabla" ng-click="por_tabla_grafica()">Mostrar tabla</button>
+                    <button class="btn btn-primary" style="float: right;" ng-show="mostrar_grafica_tabla" ng-click="por_tabla_grafica()">Mostrar grafica</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
+<div ng-show="mostrar_datos">
+    <div class="col-12" ng-show="!mostrar_grafica_tabla ">
+        <div class="tab-content">
+            <div class="card-header">
+                <canvas id="grafica_historial"></canvas>
+            </div>
+            <br>
+        </div>
+    </div>
+
+    <div class="container-fluid" style="margin-top: 5px; overflow: auto;">
+        <div ng-show="mostrar_grafica_tabla" class="card borde-azul shadow h-100 py-2">
+            <div class="col-12" ng-show="tabla_meses">
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Corriente</th>
+                            <th scope="col">Potencia</th>
+                            <th scope="col">Energia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="registros in registro">
+                            <th>{{$index}}</th>
+                            <th>{{registros.fecha_medicion}}</th>
+                            <th>{{registros.potencia}} </th>
+                            <th>{{registros.corriente}}</th>
+                            <th>{{registros.energia}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="col-12" ng-show="tabla_dias">
+                <table class="table table-hover table-sm">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Potencia</th>
+                            <th scope="col">Corriente</th>
+                            <th scope="col">Energia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="registros in registro">
+                            <th>{{$index}}</th>
+                            <th>{{registros.fecha_medicion}}</th>
+                            <th>{{registros.potencia}}</th>
+                            <th>{{registros.corriente}}</th>
+                            <th>{{registros.energia}}</th>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<br>

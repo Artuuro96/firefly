@@ -1,0 +1,81 @@
+<html>
+
+<body>
+    <br>
+    <br>
+    <table style="border-collapse: collapse;" border="1" ; width="700" align="center">
+        <tbody>
+            <tr height="25">
+                <td height="25">
+                    <p align="center">
+                        <font size=6>
+                            <strong>REPORTE DE FALLA</strong>
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4>  N&uacutemero de Luminaria</p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4>Fecha y Hora</p>
+                </td>
+            </tr>
+            <tr>
+                <td height="25">
+                    <p align="center">
+                        <font size=5> Reporte de error
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4>  {{info.numero_luminaria}}
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4> {{info.fecha_dia}}
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="container" style="margin-top: 50px; margin-right: 25px; margin-left: 25px">
+
+        <table class="table table-bordered text-center">
+            <tbody>
+                <tr>
+                    <th colspan="1">
+                        <div class="text-center">
+                            Especificaciones:
+                            <hr> Tiempo de respuesta: {{info.retardo}} (ms)
+                            <br> N&uacutemero de Lumenes: {{info.especificaciones.numero_lumenes}}
+                            <br> &Aacutengulo de Iluminaci&oacuten: {{info.especificaciones.angulo_iluminacion}} (°)
+                            <br> Temperatura: {{info.especificaciones.temperatura}} (°C)
+                            <br> Node MCU ID: {{info.node_id}}
+                            <br> Vida &uacutetil: {{info.especificaciones.vida_util}} (hr)
+                            <br> Potencia: {{info.especificaciones.consumo}} (Watts)
+                            <br> Lat: {{info.coordenada_x}}
+                            <br> Lng: {{info.coordenada_y}}
+                            <br>
+                        </div>
+                    </th>
+                    <th colspan="5">
+                        <div class="text-center">
+                            Descripci&oacuten de Falla:
+                            <hr> {{info.detalle}}
+                        </div>
+                    </th>
+                </tr>
+                <tr>
+                    <th colspan="6">
+                        Reporta: {{info.tipo}}
+                    </th>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    <style type="text/css" media="print">
+        #sidebar {
+            display: none;
+        }
+
+        main {
+            float: none;
+        }
+    </style>
+</head>
+
+<body>
+    <br>
+    <br>
+    <table style="border-collapse: collapse;" border="1" ; width="700" align="center">
+        <tbody>
+            <tr height="25">
+                <td height="25">
+                    <p align="center">
+                        <font size=6>
+                            <strong>HISTORIAL</strong>
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4> N&uacutemero Luminaria</p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4>Fecha</p>
+                </td>
+            </tr>
+            <tr>
+                <td height="25">
+                    <p align="center">
+                        <font size=5> Registro del consumo energ&eacutetico
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4> {{info.numero_luminaria}}
+                    </p>
+                </td>
+                <td height="25">
+                    <p align="center">
+                        <font size=4> {{info.fecha}}
+                    </p>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div style="background: linear-gradient(0deg, rgba(34,193,195,1) 0%, rgba(45,213,253,1) 100%)">
+        <hr>
+        <font size=5>
+            <p>Consumo total: {{info.energia_total}} W/h</p>
+
+            <hr>
+    </div>
+    <table style="border-collapse: collapse;" border="1" align="center" width="650">
+        <tbody>
+            <tr>
+                <td height="18">
+                    <p align="center">
+                        <font size=4>
+                            <strong>#</strong>
+                    </p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4>
+                            <strong>Fecha</strong>
+                    </p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4>
+                            <strong>Corriente (A)</strong>
+                    </p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4>
+                            <strong>Potencia (W)</strong>
+                    </p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4>
+                            <strong>Energ&iacutea (W/h)</strong>
+                    </p>
+                </td>
+            </tr>
+            {{#each info.datos_para_enviar as |dato|}}
+            <tr>
+                <td height="18">
+                    <p align="center">
+                        <font size=4> {{@index}}</p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4> {{dato.fecha_medicion}}</p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4> {{dato.corriente}}</p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4> {{dato.potencia}}</p>
+                </td>
+                <td height="18">
+                    <p align="center">
+                        <font size=4> {{dato.energia}}</p>
+                </td>
+            </tr>
+            {{/each}}
+        </tbody>
+    </table>
+
+
+
+</body>
+
+</html>
