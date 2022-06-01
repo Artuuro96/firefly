@@ -20,6 +20,7 @@ let opciones_conexion = {
     reconnectInterval: 1000
 };
 
+console.log("HOLA MUNDO JEJEJEJE")
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
 
