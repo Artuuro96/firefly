@@ -10,7 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "angular-strap": "^2.3.12",
-    "cote": "^0.20.0",
+    "cote": "^1.0.3",
     "express": "^4.16.4",
     "flatpickr": "^4.5.2",
     "handlebars": "^4.1.2",
